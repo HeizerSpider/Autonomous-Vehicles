@@ -1,9 +1,9 @@
 # Autonomous Vehicles
 
 
-#### Taxonomy of driving:
+### Taxonomy of driving:
 
-Driving Task  
+- Driving Task  
     - Perceiving the environment  
     - Motion Planning (From point A to point B)  
     - Vehicle Control: 
@@ -13,20 +13,20 @@ Driving Task
         - Planning (Long/Short term)  
         - Miscellaneos (Signals etc)  
 
-Automated Capabilities:
+- Automated Capabilities:  
     - Automated Lateral/longitudinal control  
     - Degree of OEDR  
     - Automatic Emergency Response (System alone or Driver supervision required)  
     - System perform in all scenarios? Or is it limited?  
 
-Operational Design Domain (ODD)  
+- Operational Design Domain (ODD)  
     - Operating conditions (Night/Day, Road conditions etc.)  
 
-Classification of Driving System Automation   
+- Classification of Driving System Automation   
     - Factors: Driver attention/ Driver action (intervention)/ Driving Task
 
 
-#### SAE Standard:
+### SAE Standard:
     - Level 0: No driving Automation (100% Driver)    
     - Level 1: Assisted Longitudinal OR Lateral Control (Adaptive Cruise Control: Longitudinal Control/ Lane Keeping Assistance: Lateral Control)    
     - Level 2: Partial Driving Automation (BOTH Lateral and Longitudinal Control) - Specific Scenarios (GM Super Cruise, Nissan Pro Pilot Assist - Driver monitoring of system is required)    
@@ -37,9 +37,9 @@ Classification of Driving System Automation
     - Level 5: High Driving Automation - Unlimited ODD  
 
 
-#### Perception: 
+### Perception: 
 - Perceive driving condtions --> React
-- What is perception? Make snese of environment and ourselves
+- What is perception? Make sense of environment and ourselves
 - Identification and understanding object's motion (Prediction of trajectory to react accordingly)
 
 1) Static: Road and Lane markings, Curbs, Road Signs, Traffic Lights, Road Construction(On/Off-Road)
@@ -52,4 +52,22 @@ Detection/Segmentation: Performance of ML to achieve human level perception (can
 Not immune to sensor uncertainty (Noise, Weather)  
 Occlusion/ Reflection/ Lens Flare for camera sensor (Same, sensor data) - use radar to overcome such problems
 
-#### Decision Making
+### Decision Making in Self Driving Car Systems
+- Planning
+    - Long term planning 
+        - Navigation for the entire driving task
+        - eg. How to get from Home to work
+    - Short term planning 
+        -Changing lanes, passing an intersection followed by joining another road
+    - Immediate 
+        - Following a lane
+        - Acceleration/ braking
+
+- Structure to represent Decision making in software (And types of Planning):
+    - Reactive planning
+        - Design a set of rules that take into account the current state of ego and other objects and give decisions (not future predictions) eg. If there is a pedestrian on road, stop OR if speed limit changes, slow down
+
+    - Predictive planning (Predominant method, expandable)
+        - Make predicitons about other vehicles and how they are moving, using predictions to inform our decisions (eg. That car has been stopped for the last 10 seconds, it will continue to remain stationary, move past OR pedestrian is jaywalking, will be in my lane in the next few seconds, slow down)
+        - A more human reaction
+
