@@ -79,13 +79,6 @@ Occlusion/ Reflection/ Lens Flare for camera sensor (Same, sensor data) - use ra
 - Sensors for Perception 
     - Device that measures or detects a property of the environment (changes to a property)
 
-    - All feeding information to the Central Computer: 
-        - Takes in all sensor data and computes actions (Mostly proprietary to match specific softwares and algorithms) OR common examples: Nvidia Drive Px AND Intel Mobileye EyeQ
-        - Needs Serial and Parallel compute modules for Lidar and Image Processing: Segmentation, Object Detection and Mapping   
-        (Employ GPUs, Field Programmable Gate Arrays (FPGAs) and Application Specific Integrated Chip(ASICs)) 
-        - eg. Drive Px contains multiple GPUs, EyeQ has FPGAs to accelerate parallelizable computes (image processsing or neural network inference)
-        - Synchronization of modules is important, as well as to have a common clock (for reference) - time stamping
-
     - Types: 
         - Exteroceptive: Record a property of the surrounding environment
             - a) Camera: Essential for correctly perceiving environment      
@@ -108,9 +101,67 @@ Occlusion/ Reflection/ Lens Flare for camera sensor (Same, sensor data) - use ra
                 - IMU also calculates: Angular Rotation Rate, Acceleration (Combined measurements can be used to estimate the 3D orientation of the vehicle, Heading most impt for vehicle control)
             - b) Vehicle Odometry: Rates of rotation, Wheel Velocity, Orientation and calculate overall speed and orientation of the car (Also tracks mileage of car in normal situations)
 
-- Computing platforms available
+            <img src="/images/car_overview" width="400">
+
+- Computing platforms (Central Computer)
+        - All sensors feeding information to the Central Computer: 
+        - Takes in all sensor data and computes actions (Mostly proprietary to match specific softwares and algorithms) OR common examples: Nvidia Drive Px AND Intel Mobileye EyeQ
+        - Needs Serial and Parallel compute modules for Lidar and Image Processing: Segmentation, Object Detection and Mapping   
+        (Employ GPUs, Field Programmable Gate Arrays (FPGAs) and Application Specific Integrated Chip(ASICs)) 
+        - eg. Drive Px contains multiple GPUs, EyeQ has FPGAs to accelerate parallelizable computes (image processsing or neural network inference)
+        - Synchronization of modules is important, as well as to have a common clock (for reference) - time stamping
+
 - Basics of Designing hardware configurations
+    - Setting of assumptions: 
+        - Aggresive Deceleration: >= 5m/s^2
+        - Normal/Comfy Deceleration: ~2m/s^2
+        - Stopping distance: d = v^2/(2a)  (can consider other factors such as computing speed and road conditions etc)
+    -Sensor placement needs to support maneuvers within ODD
+
+    - Sensor coverage for different scenarios: eg. Highway driving and urban driving
+
+    ||Highway|Urban/Residential|
+    |-|------|-----------------|
+    |Traffic Speed|High|Low-Medium|
+    |Traffic Volume|High|Medium-High|
+    |# of lanes|SG 3-5|2-4|
+    |Other features|Fewer curves, exits and merges|Many turns and intersections|
+
+    - Highway Analysis:
+        - Emergency stop: 
+            - Blockage ahead, to stop in time (Longitudinal coverage- speed of 120km/h stopping distance of 110m --> Aggresive deceleration needed)- Sensing ranges of 150-200m 
+        - Change lanes or cars merging into our lane: 
+            - Sense adjacent lanes to avoid a hard stop (width of lane to be taken into consideration) 
+            - Field of view is important as well to track adjacecnt lanes
+        - Maintain speed: 
+            - Sense vehicle in own lane (Relative position and speed of front vehicle are important to maintain safe following distance ~100m in front can measure their deceleration as well) 
+            - Both vehicles moving hence no need to look as far as emergency stop scenario (Calculating reaction time/distance)
+            <img src="/images/coverage_highways" width="400">
+
+    - Urban Driving Analysis:
+        - Similar 3 maneuvers as the Highway analysis but since car is at a slower speed, there is no need for the same extent of long range sensing
+        - Overtaking:
+            - Longitudinal Coverage: Need to sense parked car and look for oncoming traffic (Wide short range sensor for parked car, narrow long range for oncoming traffic)
+            - Lateral Coverage (same as highway- lookout for merging vehicles)
+        - Turning, crossing at intersections:
+            - Near Omnidirectional Sensors for all kind of movements (approacing vehicles, nearby pedestrians, doing turns)
+        - Roundabouts:
+            - Lateral Coverage:  Slow vehicles, limited range required
+            - Longitudinal Coverage: Wider field of view due to shape of roundabout
+        <img src="/images/coverage_urban" width="400">
+        Highway case almost entirely covered
+
+    - Overall coverage and design loopholes/flaws (blind spots)
+        - Choice of sensors should be decided based on the maneuvers that we want to execute
+        - Include both long range for longitudinal dangers
+        - Wide FOV for omnidirectional perception
+        - Final choice of sensors also depends on requirements for operating conditions, sensor redundancy due to failures and budget (no one size fits all)
+
+    <img src="/images/coverage_overall" width="500">
+
+
 - Components of typical Autonomy Software Stack
+
 - Ways of representing the environment for self-driving
 
 
