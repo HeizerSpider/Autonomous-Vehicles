@@ -1,7 +1,7 @@
 # Autonomous Vehicles
 
 
-### Taxonomy of driving:
+## Taxonomy of driving:
 
 - Driving Task  
     - Perceiving the environment  
@@ -70,4 +70,47 @@ Occlusion/ Reflection/ Lens Flare for camera sensor (Same, sensor data) - use ra
     - Predictive planning (Predominant method, expandable)
         - Make predicitons about other vehicles and how they are moving, using predictions to inform our decisions (eg. That car has been stopped for the last 10 seconds, it will continue to remain stationary, move past OR pedestrian is jaywalking, will be in my lane in the next few seconds, slow down)
         - A more human reaction
+
+--------------------------------------------------------------------------------
+## Hardware and Software
+
+### Sensors and Computing Hardware
+
+- Sensors for Perception 
+    - Device that measures or detects a property of the environment (changes to a property)
+
+    - All feeding information to the Central Computer: 
+        - Takes in all sensor data and computes actions (Mostly proprietary to match specific softwares and algorithms) OR common examples: Nvidia Drive Px AND Intel Mobileye EyeQ
+        - Needs Serial and Parallel compute modules for Lidar and Image Processing: Segmentation, Object Detection and Mapping   
+        (Employ GPUs, Field Programmable Gate Arrays (FPGAs) and Application Specific Integrated Chip(ASICs)) 
+        - eg. Drive Px contains multiple GPUs, EyeQ has FPGAs to accelerate parallelizable computes (image processsing or neural network inference)
+        - Synchronization of modules is important, as well as to have a common clock (for reference) - time stamping
+
+    - Types: 
+        - Exteroceptive: Record a property of the surrounding environment
+            - a) Camera: Essential for correctly perceiving environment      
+                - Resolution of camera (no. of pixels that create the image)
+                - Field of View (horizontal and vertical angular extent visible to the camera- based on lens) - FOV and Resolution tradeoff (both must go up to maintain quality of image)
+                - Dynamic range (Difference between the lightest and darkest tones of a camera - to counter the difference in lighting throughout the day)
+            - b) Stereo camera (combination of 2 cameras with overlapping field of view and aligned image plane): enables depth estimation (using a disparity map)
+            - c) Lidar (Light Detection and Ranging): Reflective return of light beams measured (amt of returned light and time of flight of beam gives intensity and range of object detected)
+                - Comparison metrics: No. of beams, Points per second, Rotation Rate, Field of View
+                - To look further into: Solid state Lidar
+            - d) Radar (Radio detection and Ranging): Robustly detect large objects
+                - Comparison metrics: Detection Range, Field of View, Position and Speed Measurement Accuracy
+                - Wide angular FOV, short range OR Narrow FOV, longer range
+            - e) Sonar (Sound navigation and Ranging): Short range, all-weather distance measurement (good for low-cost parking solutions)
+                - Comnaprison metircs: Range, Field of View, Cost
+
+        - Proprioceptive: Records a property of the Ego Vehicle
+            - a) Global Navigation Satellite Systems (GNSS) & Inertial Measurement Unit (IMU): Measures Vehicle Position and Velocity
+                - Acuracy depends on positioning methods and corrections used
+                - IMU also calculates: Angular Rotation Rate, Acceleration (Combined measurements can be used to estimate the 3D orientation of the vehicle, Heading most impt for vehicle control)
+            - b) Vehicle Odometry: Rates of rotation, Wheel Velocity, Orientation and calculate overall speed and orientation of the car (Also tracks mileage of car in normal situations)
+
+- Computing platforms available
+- Basics of Designing hardware configurations
+- Components of typical Autonomy Software Stack
+- Ways of representing the environment for self-driving
+
 
