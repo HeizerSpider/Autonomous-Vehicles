@@ -101,7 +101,7 @@ Occlusion/ Reflection/ Lens Flare for camera sensor (Same, sensor data) - use ra
                 - IMU also calculates: Angular Rotation Rate, Acceleration (Combined measurements can be used to estimate the 3D orientation of the vehicle, Heading most impt for vehicle control)
             - b) Vehicle Odometry: Rates of rotation, Wheel Velocity, Orientation and calculate overall speed and orientation of the car (Also tracks mileage of car in normal situations)
 
-            <img src="/images/car_overview" width="400">
+            <img src="/images/car_overview.png" width="400">
 
 - Computing platforms (Central Computer)
         - All sensors feeding information to the Central Computer: 
@@ -136,7 +136,7 @@ Occlusion/ Reflection/ Lens Flare for camera sensor (Same, sensor data) - use ra
         - Maintain speed: 
             - Sense vehicle in own lane (Relative position and speed of front vehicle are important to maintain safe following distance ~100m in front can measure their deceleration as well) 
             - Both vehicles moving hence no need to look as far as emergency stop scenario (Calculating reaction time/distance)
-            <img src="/images/coverage_highways" width="400">
+            <img src="/images/coverage_highways.png" width="400">
 
     - Urban Driving Analysis:
         - Similar 3 maneuvers as the Highway analysis but since car is at a slower speed, there is no need for the same extent of long range sensing
@@ -148,7 +148,7 @@ Occlusion/ Reflection/ Lens Flare for camera sensor (Same, sensor data) - use ra
         - Roundabouts:
             - Lateral Coverage:  Slow vehicles, limited range required
             - Longitudinal Coverage: Wider field of view due to shape of roundabout
-        <img src="/images/coverage_urban" width="400">
+        <img src="/images/coverage_urban.png" width="400">
         Highway case almost entirely covered
 
     - Overall coverage and design loopholes/flaws (blind spots)
@@ -157,7 +157,7 @@ Occlusion/ Reflection/ Lens Flare for camera sensor (Same, sensor data) - use ra
         - Wide FOV for omnidirectional perception
         - Final choice of sensors also depends on requirements for operating conditions, sensor redundancy due to failures and budget (no one size fits all)
 
-    <img src="/images/coverage_overall" width="500">
+    <img src="/images/coverage_overall.png" width="500">
 
 
 - Components of typical Autonomy Software Stack
