@@ -6,7 +6,7 @@
 - Driving Task  
     - Perceiving the environment  
     - Motion Planning (From point A to point B)  
-    - Vehicle Control: 
+    - Vehicle Control:  
         - Acceleration/velocity, Brake - Longitudinal Control  
         - Steering - Lateral Control  
         - Object and Event Detection Response (OEDR) - Detection, Reaction  
@@ -16,18 +16,18 @@
 - Automated Capabilities:  
     - Automated Lateral/longitudinal control  
     - Degree of OEDR  
-    - Automatic Emergency Response (System alone or Driver supervision required)  
-    - System perform in all scenarios? Or is it limited?  
+    - Automatic Emergency Response (System alone or Driver supervision required)   
+    - System perform in all scenarios? Or is it limited?   
 
-- Operational Design Domain (ODD)  
-    - Operating conditions (Night/Day, Road conditions etc.)  
+- Operational Design Domain (ODD)   
+    - Operating conditions (Night/Day, Road conditions etc.)   
 
-- Classification of Driving System Automation   
-    - Factors: Driver attention/ Driver action (intervention)/ Driving Task
+- Classification of Driving System Automation    
+    - Factors: Driver attention/ Driver action (intervention)/ Driving Task  
 
 
 ### SAE Standard:
-    - Level 0: No driving Automation (100% Driver)    
+    - Level 0: No driving Automation (100% Driver)     
     - Level 1: Assisted Longitudinal OR Lateral Control (Adaptive Cruise Control: Longitudinal Control/ Lane Keeping Assistance: Lateral Control)    
     - Level 2: Partial Driving Automation (BOTH Lateral and Longitudinal Control) - Specific Scenarios (GM Super Cruise, Nissan Pro Pilot Assist - Driver monitoring of system is required)    
     - Level 3: Conditional Driving Automation = Level 2 + OEDR - Requires Driver monitoring. System can alert driver to take over in time to intervene  
@@ -50,26 +50,26 @@
 - Challenges:
 Detection/Segmentation: Performance of ML to achieve human level perception (can it ever reach such a standard?)  
 Not immune to sensor uncertainty (Noise, Weather)  
-Occlusion/ Reflection/ Lens Flare for camera sensor (Same, sensor data) - use radar to overcome such problems
+Occlusion/ Reflection/ Lens Flare for camera sensor (Same, sensor data) - use radar to overcome such problems  
 
 ### Decision Making in Self Driving Car Systems
-- Planning
-    - Long term planning 
-        - Navigation for the entire driving task
-        - eg. How to get from Home to work
-    - Short term planning 
-        -Changing lanes, passing an intersection followed by joining another road
-    - Immediate 
-        - Following a lane
-        - Acceleration/ braking
+- Planning  
+    - Long term planning   
+        - Navigation for the entire driving task  
+        - eg. How to get from Home to work  
+    - Short term planning   
+        -Changing lanes, passing an intersection followed by joining another road  
+    - Immediate   
+        - Following a lane   
+        - Acceleration/ braking  
 
 - Structure to represent Decision making in software (And types of Planning):
-    - Reactive planning
-        - Design a set of rules that take into account the current state of ego and other objects and give decisions (not future predictions) eg. If there is a pedestrian on road, stop OR if speed limit changes, slow down
+    - Reactive planning  
+        - Design a set of rules that take into account the current state of ego and other objects and give decisions (not future predictions) eg. If there is a pedestrian on road, stop OR if speed limit changes, slow down  
 
-    - Predictive planning (Predominant method, expandable)
-        - Make predicitons about other vehicles and how they are moving, using predictions to inform our decisions (eg. That car has been stopped for the last 10 seconds, it will continue to remain stationary, move past OR pedestrian is jaywalking, will be in my lane in the next few seconds, slow down)
-        - A more human reaction
+    - Predictive planning (Predominant method, expandable)  
+        - Make predicitons about other vehicles and how they are moving, using predictions to inform our decisions (eg. That car has been stopped for the last 10 seconds, it will continue to remain stationary, move past OR pedestrian is jaywalking, will be in my lane in the next few seconds, slow down)  
+        - A more human reaction  
 
 --------------------------------------------------------------------------------
 ## Hardware and Software
@@ -93,7 +93,7 @@ Occlusion/ Reflection/ Lens Flare for camera sensor (Same, sensor data) - use ra
                 - Comparison metrics: Detection Range, Field of View, Position and Speed Measurement Accuracy
                 - Wide angular FOV, short range OR Narrow FOV, longer range
             - e) Sonar (Sound navigation and Ranging): Short range, all-weather distance measurement (good for low-cost parking solutions)
-                - Comnaprison metircs: Range, Field of View, Cost
+                - Comparison metircs: Range, Field of View, Cost
 
         - Proprioceptive: Records a property of the Ego Vehicle
             - a) Global Navigation Satellite Systems (GNSS) & Inertial Measurement Unit (IMU): Measures Vehicle Position and Velocity
@@ -104,21 +104,21 @@ Occlusion/ Reflection/ Lens Flare for camera sensor (Same, sensor data) - use ra
             <img src="/images/car_overview.png" width="400">
 
 - Computing platforms (Central Computer)
-        - All sensors feeding information to the Central Computer: 
-        - Takes in all sensor data and computes actions (Mostly proprietary to match specific softwares and algorithms) OR common examples: Nvidia Drive Px AND Intel Mobileye EyeQ
-        - Needs Serial and Parallel compute modules for Lidar and Image Processing: Segmentation, Object Detection and Mapping   
-        (Employ GPUs, Field Programmable Gate Arrays (FPGAs) and Application Specific Integrated Chip(ASICs)) 
-        - eg. Drive Px contains multiple GPUs, EyeQ has FPGAs to accelerate parallelizable computes (image processsing or neural network inference)
-        - Synchronization of modules is important, as well as to have a common clock (for reference) - time stamping
+    - All sensors feeding information to the Central Computer:   
+    - Takes in all sensor data and computes actions (Mostly proprietary to match specific softwares and algorithms) OR common examples: Nvidia Drive Px AND Intel Mobileye EyeQ  
+    - Needs Serial and Parallel compute modules for Lidar and Image Processing: Segmentation, Object Detection and Mapping  
+    (Employ GPUs, Field Programmable Gate Arrays (FPGAs) and Application Specific Integrated Chip(ASICs))   
+    - eg. Drive Px contains multiple GPUs, EyeQ has FPGAs to accelerate parallelizable computes (image processsing or neural network inference)  
+    - Synchronization of modules is important, as well as to have a common clock (for reference)  - time stamping  
 
-- Basics of Designing hardware configurations
+- Basics of Designing hardware configurations  
     - Setting of assumptions: 
-        - Aggresive Deceleration: >= 5m/s^2
-        - Normal/Comfy Deceleration: ~2m/s^2
-        - Stopping distance: d = v^2/(2a)  (can consider other factors such as computing speed and road conditions etc)
-    -Sensor placement needs to support maneuvers within ODD
+        - Aggresive Deceleration: >= 5m/s^2  
+        - Normal/Comfy Deceleration: ~2m/s^2  
+        - Stopping distance: d = v^2/(2a)  (can consider other factors such as computing speed and road conditions etc)  
+    - Sensor placement needs to support maneuvers within ODD  
 
-    - Sensor coverage for different scenarios: eg. Highway driving and urban driving
+    - Sensor coverage for different scenarios: eg. Highway driving and urban driving  
 
     ||Highway|Urban/Residential|
     |-|------|-----------------|
@@ -129,39 +129,40 @@ Occlusion/ Reflection/ Lens Flare for camera sensor (Same, sensor data) - use ra
 
     - Highway Analysis:
         - Emergency stop: 
-            - Blockage ahead, to stop in time (Longitudinal coverage- speed of 120km/h stopping distance of 110m --> Aggresive deceleration needed)- Sensing ranges of 150-200m 
-        - Change lanes or cars merging into our lane: 
-            - Sense adjacent lanes to avoid a hard stop (width of lane to be taken into consideration) 
-            - Field of view is important as well to track adjacecnt lanes
-        - Maintain speed: 
-            - Sense vehicle in own lane (Relative position and speed of front vehicle are important to maintain safe following distance ~100m in front can measure their deceleration as well) 
-            - Both vehicles moving hence no need to look as far as emergency stop scenario (Calculating reaction time/distance)
-            <img src="/images/coverage_highways.png" width="400">
+            - Blockage ahead, to stop in time (Longitudinal coverage- speed of 120km/h stopping distance of 110m --> Aggresive deceleration needed)  
+            - Sensing ranges of 150-200m   
+        - Change lanes or cars merging into our lane:   
+            - Sense adjacent lanes to avoid a hard stop (width of lane to be taken into consideration)   
+            - Field of view is important as well to track adjacecnt lanes  
+        - Maintain speed:   
+            - Sense vehicle in own lane (Relative position and speed of front vehicle are important to maintain safe following distance ~100m in front can measure their deceleration as well)  
+            - Both vehicles moving hence no need to look as far as emergency stop scenario (Calculating reaction time/distance)  
+            <img src="/images/coverage_highway.png" width="400">
 
     - Urban Driving Analysis:
-        - Similar 3 maneuvers as the Highway analysis but since car is at a slower speed, there is no need for the same extent of long range sensing
-        - Overtaking:
-            - Longitudinal Coverage: Need to sense parked car and look for oncoming traffic (Wide short range sensor for parked car, narrow long range for oncoming traffic)
-            - Lateral Coverage (same as highway- lookout for merging vehicles)
-        - Turning, crossing at intersections:
-            - Near Omnidirectional Sensors for all kind of movements (approacing vehicles, nearby pedestrians, doing turns)
-        - Roundabouts:
-            - Lateral Coverage:  Slow vehicles, limited range required
-            - Longitudinal Coverage: Wider field of view due to shape of roundabout
-        <img src="/images/coverage_urban.png" width="400">
+        - Similar 3 maneuvers as the Highway analysis but since car is at a slower speed, there is no need for the same extent of long range sensing  
+        - Overtaking:  
+            - Longitudinal Coverage: Need to sense parked car and look for oncoming traffic (Wide short range sensor for parked car, narrow long range for oncoming traffic)  
+            - Lateral Coverage (same as highway- lookout for merging vehicles)  
+        - Turning, crossing at intersections:  
+            - Near Omnidirectional Sensors for all kind of movements (approacing vehicles, nearby pedestrians, doing turns)  
+        - Roundabouts:  
+            - Lateral Coverage:  Slow vehicles, limited range required  
+            - Longitudinal Coverage: Wider field of view due to shape of roundabout  
+        <img src="/images/coverage_urban.png" width="400">  
         Highway case almost entirely covered
 
     - Overall coverage and design loopholes/flaws (blind spots)
-        - Choice of sensors should be decided based on the maneuvers that we want to execute
-        - Include both long range for longitudinal dangers
-        - Wide FOV for omnidirectional perception
-        - Final choice of sensors also depends on requirements for operating conditions, sensor redundancy due to failures and budget (no one size fits all)
+        - Choice of sensors should be decided based on the maneuvers that we want to execute  
+        - Include both long range for longitudinal dangers  
+        - Wide FOV for omnidirectional perception  
+        - Final choice of sensors also depends on requirements for operating conditions, sensor redundancy due to failures and budget (no one size fits all)  
 
     <img src="/images/coverage_overall.png" width="500">
 
 
-- Components of typical Autonomy Software Stack
+- Components of typical Autonomy Software Stack  
 
-- Ways of representing the environment for self-driving
+- Ways of representing the environment for self-driving  
 
 
