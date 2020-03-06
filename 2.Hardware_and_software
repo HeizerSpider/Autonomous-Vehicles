@@ -1,0 +1,142 @@
+## Hardware and Software
+
+### Sensors and Computing Hardware
+
+- Sensors for Perception 
+    - Device that measures or detects a property of the environment (changes to a property)
+
+    - Sensor Types: 
+        - Exteroceptive: Record a property of the surrounding environment
+            - a) Camera: Essential for correctly perceiving environment      
+                - Resolution of camera (no. of pixels that create the image)
+                - Field of View (horizontal and vertical angular extent visible to the camera- based on lens) - FOV and Resolution tradeoff (both must go up to maintain quality of image)
+                - Dynamic range (Difference between the lightest and darkest tones of a camera - to counter the difference in lighting throughout the day)
+            - b) Stereo camera (combination of 2 cameras with overlapping field of view and aligned image plane): enables depth estimation (using a disparity map)
+            - c) Lidar (Light Detection and Ranging): Reflective return of light beams measured (amt of returned light and time of flight of beam gives intensity and range of object detected)
+                - Comparison metrics: No. of beams, Points per second, Rotation Rate, Field of View
+                - To look further into: Solid state Lidar
+            - d) Radar (Radio detection and Ranging): Robustly detect large objects
+                - Comparison metrics: Detection Range, Field of View, Position and Speed Measurement Accuracy
+                - Wide angular FOV, short range OR Narrow FOV, longer range
+            - e) Sonar (Sound navigation and Ranging): Short range, all-weather distance measurement (good for low-cost parking solutions)
+                - Comparison metircs: Range, Field of View, Cost
+
+        - Proprioceptive: Records a property of the Ego Vehicle
+            - a) Global Navigation Satellite Systems (GNSS) & Inertial Measurement Unit (IMU): Measures Vehicle Position and Velocity
+                - Acuracy depends on positioning methods and corrections used
+                - IMU also calculates: Angular Rotation Rate, Acceleration (Combined measurements can be used to estimate the 3D orientation of the vehicle, Heading most impt for vehicle control)
+            - b) Vehicle Odometry: Rates of rotation, Wheel Velocity, Orientation and calculate overall speed and orientation of the car (Also tracks mileage of car in normal situations)
+
+            <img src="/images/car_overview.png" width="400">
+
+- Computing platforms (Central Computer)
+    - All sensors feeding information to the Central Computer:   
+    - Takes in all sensor data and computes actions (Mostly proprietary to match specific softwares and algorithms) OR common examples: Nvidia Drive Px AND Intel Mobileye EyeQ  
+    - Needs Serial and Parallel compute modules for Lidar and Image Processing: Segmentation, Object Detection and Mapping  
+    (Employ GPUs, Field Programmable Gate Arrays (FPGAs) and Application Specific Integrated Chip(ASICs))   
+    - eg. Drive Px contains multiple GPUs, EyeQ has FPGAs to accelerate parallelizable computes (image processsing or neural network inference)  
+    - Synchronization of modules is important, as well as to have a common clock (for reference)  - time stamping  
+
+- Basics of Designing hardware configurations  
+    - Setting of assumptions: 
+        - Aggresive Deceleration: >= 5m/s^2  
+        - Normal/Comfy Deceleration: ~2m/s^2  
+        - Stopping distance: d = v^2/(2a)  (can consider other factors such as computing speed and road conditions etc)  
+    - Sensor placement needs to support maneuvers within ODD  
+
+    - Sensor coverage for different scenarios: eg. Highway driving and urban driving  (SCENARIO PLANNING)
+
+    ||Highway|Urban/Residential|
+    |-|------|-----------------|
+    |Traffic Speed|High|Low-Medium|
+    |Traffic Volume|High|Medium-High|
+    |# of lanes|SG 3-5|2-4|
+    |Other features|Fewer curves, exits and merges|Many turns and intersections|
+
+    - Highway Analysis:
+        - Emergency stop: 
+            - Blockage ahead, to stop in time (Longitudinal coverage- speed of 120km/h stopping distance of 110m --> Aggresive deceleration needed)  
+            - Sensing ranges of 150-200m   
+        - Change lanes or cars merging into our lane:   
+            - Sense adjacent lanes to avoid a hard stop (width of lane to be taken into consideration)   
+            - Field of view is important as well to track adjacecnt lanes  
+        - Maintain speed:   
+            - Sense vehicle in own lane (Relative position and speed of front vehicle are important to maintain safe following distance ~100m in front can measure their deceleration as well)  
+            - Both vehicles moving hence no need to look as far as emergency stop scenario (Calculating reaction time/distance)  
+            <img src="/images/coverage_highway.png" width="400">
+
+    - Urban Driving Analysis:
+        - Similar 3 maneuvers as the Highway analysis but since car is at a slower speed, there is no need for the same extent of long range sensing  
+        - Overtaking:  
+            - Longitudinal Coverage: Need to sense parked car and look for oncoming traffic (Wide short range sensor for parked car, narrow long range for oncoming traffic)  
+            - Lateral Coverage (same as highway- lookout for merging vehicles)  
+        - Turning, crossing at intersections:  
+            - Near Omnidirectional Sensors for all kind of movements (approacing vehicles, nearby pedestrians, doing turns)  
+        - Roundabouts:  
+            - Lateral Coverage:  Slow vehicles, limited range required  
+            - Longitudinal Coverage: Wider field of view due to shape of roundabout  
+        <img src="/images/coverage_urban.png" width="400">  
+        Highway case almost entirely covered
+
+    - Overall coverage and design loopholes/flaws (blind spots)
+        - Choice of sensors should be decided based on the maneuvers that we want to execute  
+        - Include both long range for longitudinal dangers  
+        - Wide FOV for omnidirectional perception  
+        - Final choice of sensors also depends on requirements for operating conditions, sensor redundancy due to failures and budget (no one size fits all)  
+
+    <img src="/images/coverage_overall.png" width="500">
+
+
+- Components of typical Autonomy Software Stack (1 type of software architecture)
+    - Environment Perception (Localization module)
+        - Localization of the vehicle in space 
+            - Uses GPS/IMU/Wheel Odometry
+            - Lidar and camera for better accuracy (Look at state estimation)
+        - Take into consideration other elements (humans, bikes, cars, signs etc)
+            - Dynamic objects (Cars, humans, bikes):
+                -Camera and Lidar point clouds used to form 3D bounding boxes around dynamic objects in the scene
+                - 3D boxes encodes type of object, position, orientation and size 
+                - Tracker module tracks objects, provides current position and also history of path through environment (tied in with road maps to predict future paths of these objects - prediction module used)
+            - Static Objects (Lane car is in, Road Signs):
+                -Camera and lidar data used
+
+
+    - Environment Mapping (works with perception modules to improve data)
+        - Occupancy grid maps: map of all static objects in environment surrounding the vehicle (Lidar used)
+            - Driveable surface and dynamic object points removed
+            - Set of grid cells with a probability that each cell is occupied
+            - Handle uncertainty in measurement data and improve the map over time
+        - Localization map:
+            - Constructed from camera and lidar data
+            - Sensor data compared to this map while driving to determine motion of the car relative to the map (combined with other proprioceptive sensors)
+            - Improve ego state estimation
+        - Detailed Road Map
+            - Provides map of road segments that represent the driving enviroment that the vehicle is driving through
+            - Captures signs etc that the vehicle can use to motion plan
+            - Combination of pre-recorded and incoming info from current static environment gatehered by perception stack
+
+
+    - Motion Planning (Makes decisions to get a safe comfortable planned path)
+        - Mission Planner:
+            - Long term planning (Current location through network to destination)
+        - Behaviour Planner
+            - Short term planning (safe actions/ maneuvers to be executed along the path)
+            - eg. Changing lanes etc
+            - Constraints to execute with each action
+        - Local Planner
+            - Immediate/Reactive planning (Defines path a specific velocity)
+            - Planned trajectory
+            - Needs to take into consideration Occupancy grid, Behavioural planner, vehicle operating limits and other dynamic objects in environment
+
+
+    - Vehicle Controller (Execution of plan (Actuation))
+        - Longitudinal and Lateral Controllers (velocity and steering)
+        - Both controllers calculate local errors and tracking performance of the local plan (and minimize the errors to stay on the plan)
+
+
+    - System Supervisor (Hardware and Software Supervisor)
+        - Function: Monitors all asepcts of car and gives a warning in case of failure
+        - eg. Broken sensor, degraded info, non-matching domain
+        - Validating software stack to ensure all elements running as intended at correct frequencies (analyse inconsistencies)
+
+- Ways of representing the environment for self-driving  
